@@ -22,7 +22,3 @@ module GreetFunction =
 
             return OkObjectResult(sprintf "Hello %s" req.Name)
         } |> Async.StartAsTask
-        
-
-
-
