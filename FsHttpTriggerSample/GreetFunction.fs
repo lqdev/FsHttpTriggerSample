@@ -9,24 +9,18 @@ module GreetFunction =
     open System.IO
     open Microsoft.Extensions.Logging
 
+    [<CLIMutable>]
     type User = {
         Name: string
     }
 
     [<FunctionName("Greet")>]
-    let Run ([<HttpTrigger(Methods=[|"POST"|])>] req:HttpRequest) (log:ILogger) = 
+    let Run ([<HttpTrigger(Methods=[|"POST"|])>] req:User) (log:ILogger) = 
         async {
             "Runnning Function"
             |> log.LogInformation
 
-            let! body = 
-                new StreamReader(req.Body) 
-                |> (fun stream -> stream.ReadToEndAsync()) 
-                |> Async.AwaitTask
-
-            let user = JsonConvert.DeserializeObject<User>(body)
-
-            return OkObjectResult(sprintf "Hello %s" user.Name)
+            return OkObjectResult(sprintf "Hello %s" req.Name)
         } |> Async.StartAsTask
         
 
